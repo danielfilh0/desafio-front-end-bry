@@ -22,6 +22,12 @@ export const GlobalStyle = createGlobalStyle`
         cursor: pointer;
     }
 
+    a {
+        color: inherit;
+        text-decoration: none;
+        display: block;
+    }
+
     .container {
         max-width: 1024px;
     }

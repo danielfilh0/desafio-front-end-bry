@@ -1,6 +1,8 @@
+import { useState, useEffect, useContext } from "react";
+import { Link } from "react-router-dom";
+import axios from "axios";
 import { Navigation } from "swiper";
 import { Swiper, SwiperSlide } from "swiper/react";
-import { useState, useEffect } from "react";
 import { api } from "../../services/api";
 import { Container } from "./styles";
 import searchImg from "../../assets/search.svg";
@@ -9,17 +11,23 @@ import usersImg from "../../assets/users.svg";
 import "swiper/css";
 import { MovieCard } from "../../components/MovieCard";
 import { CharacterCard } from "../../components/CharacterCard";
-import axios from "axios";
+import { MoviesContext } from "../../contexts/MoviesContext";
+import { CharactersCarousel } from "../../components/CharactersCarousel";
 
 export function Home() {
     const [isSearching, setIsSearching] = useState(false);
     const [search, setSearch] = useState("");
-    const [movies, setMovies] = useState([]);
-    const [researchMovies, setResearchMovies] = useState([]);
+
     const [characters, setCharacters] = useState([]);
+
+    const { movies, setMovies } = useContext(MoviesContext);
+
+    const [researchMovies, setResearchMovies] = useState([]);
     const [researchCharacters, setResearchCharacters] = useState([]);
+
     const [loadingMovies, setLoadingMovies] = useState(false);
     const [loadingCharacters, setLoadingCharacters] = useState(false);
+
     const [endpointsCharacters, setEndpointsCharacters] = useState([]);
 
     async function getMoviesFromApi() {
@@ -148,13 +156,15 @@ export function Home() {
                         >
                             {movies.map((movie, i) => (
                                 <SwiperSlide key={i}>
-                                    <MovieCard
-                                        title={movie.title}
-                                        text={movie.opening_crawl}
-                                        director={movie.director}
-                                        date={movie.release_date}
-                                        loading={loadingMovies}
-                                    />
+                                    <Link to={`/movies/${movie.episode_id}`}>
+                                        <MovieCard
+                                            title={movie.title}
+                                            text={movie.opening_crawl}
+                                            director={movie.director}
+                                            date={movie.release_date}
+                                            loading={loadingMovies}
+                                        />
+                                    </Link>
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -166,35 +176,7 @@ export function Home() {
                             Characters
                         </h2>
 
-                        <Swiper
-                            className="carousel"
-                            navigation
-                            modules={[Navigation]}
-                            slidesPerView={1.4}
-                            onSlideChange={(e) => loadMoreCharacters(e)}
-                            spaceBetween={30}
-                            breakpoints={{
-                                500: {
-                                    slidesPerView: 2.2,
-                                },
-                                768: {
-                                    slidesPerView: 3,
-                                },
-                                1024: {
-                                    slidesPerView: 4,
-                                },
-                            }}
-                        >
-                            {characters.map((character, i) => (
-                                <SwiperSlide key={i}>
-                                    <CharacterCard
-                                        name={character.name}
-                                        homeworld={character.homeworld}
-                                        loading={loadingCharacters}
-                                    />
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                        <CharactersCarousel characters={characters} onSlideChange={(e) => loadMoreCharacters(e)} loading={loadingCharacters} />
                     </section>
                 </>
             ) : (
@@ -261,39 +243,7 @@ export function Home() {
                                 Characters
                             </h2>
 
-                            <Swiper
-                                className="carousel"
-                                navigation
-                                watchOverflow
-                                modules={[Navigation]}
-                                slidesPerView={1.4}
-                                spaceBetween={30}
-                                breakpoints={{
-                                    500: {
-                                        slidesPerView: 2.2,
-                                    },
-                                    768: {
-                                        slidesPerView: 3,
-                                    },
-                                    1024: {
-                                        slidesPerView: 4,
-                                    },
-                                }}
-                            >
-                                {researchCharacters.map(
-                                    (researchCharacter, i) => (
-                                        <SwiperSlide key={i}>
-                                            <CharacterCard
-                                                name={researchCharacter.name}
-                                                homeworld={
-                                                    researchCharacter.homeworld
-                                                }
-                                                loading={loadingCharacters}
-                                            />
-                                        </SwiperSlide>
-                                    )
-                                )}
-                            </Swiper>
+                            <CharactersCarousel characters={researchCharacters} loading={loadingCharacters} />
                         </div>
                     )}
                 </section>

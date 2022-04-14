@@ -8,6 +8,8 @@ export const theme = {
         grayAux: "#CCCCCC",
         bgCard: "#F5F5F5",
         blue: "#009CDA",
+        red: "#FF5656",
+        green: "#00BE3B",
     },
     fonts: {
         primary: "Ubuntu",
