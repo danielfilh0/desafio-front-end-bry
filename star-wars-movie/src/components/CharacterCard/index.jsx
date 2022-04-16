@@ -3,12 +3,14 @@ import axios from "axios";
 import { Container } from "./styles";
 import charImg from "../../assets/char-img.svg";
 import gpsImg from "../../assets/gps.svg";
-import loadingImg from "../../assets/loading-char.svg";
+import { LoadingCharacter } from "../LoadingCharacter";
 
-export function CharacterCard({ name, homeworld, loading, endpoint }) {
+export function CharacterCard({ name, homeworld, endpoint }) {
     const [planet, setPlanet] = useState("");
 
     const [data, setData] = useState([]);
+
+    const [loading, setLoading] = useState(null);
 
     useEffect(() => {
         if (endpoint) {
@@ -16,36 +18,38 @@ export function CharacterCard({ name, homeworld, loading, endpoint }) {
         } else {
             getHomeworldFromApi(homeworld);
         }
-    }, [planet]);
+    }, []);
 
     async function getData() {
         const response = await axios.get(endpoint);
-            
+
         setData(response.data);
 
         getHomeworldFromApi(response.data.homeworld);
     }
 
     async function getHomeworldFromApi(endpoint) {
+        setLoading(true);
+
         const response = await axios.get(endpoint);
 
         setPlanet(response.data.name);
+
+        setLoading(false);
     }
 
     if (loading) {
-        return (
-            <Container>
-                <div className="skeleton">
-                    <img src={loadingImg} alt="" />
-                </div>
-            </Container>
-        );
+        return <LoadingCharacter />;
     }
 
     if (endpoint) {
         return (
             <Container>
-                <img className="user" src={charImg} alt={`Imagem de ${data.name}`} />
+                <img
+                    className="user"
+                    src={charImg}
+                    alt={`Imagem de ${data.name}`}
+                />
 
                 <h3>{data.name}</h3>
 
@@ -54,17 +58,17 @@ export function CharacterCard({ name, homeworld, loading, endpoint }) {
                 {planet && <p>{planet}</p>}
             </Container>
         );
-    } else {
-        return (
-            <Container>
-                <img className="user" src={charImg} alt={`Imagem de ${name}`} />
-
-                <h3>{name}</h3>
-
-                <img className="icon" src={gpsImg} alt="Ícone de localização" />
-
-                {planet && <p>{planet}</p>}
-            </Container>
-        );
     }
+
+    return (
+        <Container>
+            <img className="user" src={charImg} alt={`Imagem de ${name}`} />
+
+            <h3>{name}</h3>
+
+            <img className="icon" src={gpsImg} alt="Ícone de localização" />
+
+            {planet && <p>{planet}</p>}
+        </Container>
+    );
 }

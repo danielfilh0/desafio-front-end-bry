@@ -3,8 +3,14 @@ import { Navigation } from "swiper";
 import "swiper/css";
 import { CharacterCard } from "../CharacterCard";
 import { Container } from "./styles";
+import { LoadingCharacters } from "../LoadingCharacters";
 
-export function CharactersCarousel({ characters, loading, ...props }) {
+export function CharactersCarousel({ characters, loading, setLoading, endpoint, ...props }) {
+    if (loading) {
+        return (
+            <LoadingCharacters />
+        )
+    }
     return (
         <Container>
             <Swiper
@@ -32,6 +38,8 @@ export function CharactersCarousel({ characters, loading, ...props }) {
                             name={character.name}
                             homeworld={character.homeworld}
                             loading={loading}
+                            setLoading={setLoading}
+                            endpoint={endpoint}
                         />
                     </SwiperSlide>
                 ))}

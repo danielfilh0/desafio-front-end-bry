@@ -26,7 +26,11 @@ export function Movie() {
 
     const [comments, setComments] = useState([]);
 
+    const [loadingCarousel, setLoadingCarousel] = useState(false);
+
     useEffect(() => {
+        setLoadingCarousel(true);
+
         let id = Number(params.id);
 
         setMovie(movies.filter((film) => film.episode_id === id));
@@ -115,7 +119,10 @@ export function Movie() {
                         >
                             {movie[0].characters.map((character, i) => (
                                 <SwiperSlide key={i}>
-                                    <CharacterCard endpoint={character} />
+                                    <CharacterCard
+                                        endpoint={character}
+                                        setLoadingCarousel={setLoadingCarousel}
+                                    />
                                 </SwiperSlide>
                             ))}
                         </Swiper>
@@ -142,12 +149,13 @@ export function Movie() {
                                 type="email"
                                 placeholder="Email"
                                 id="email"
-                                className={isValidEmail ? "email" : "email-invalid"}
+                                className={
+                                    isValidEmail ? "email" : "email-invalid"
+                                }
                                 value={email}
                                 onChange={(event) =>
                                     setEmail(event.target.value)
                                 }
-                                
                             />
 
                             <textarea

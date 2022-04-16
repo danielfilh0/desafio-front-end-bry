@@ -1,22 +1,19 @@
 import { useState, useEffect, useContext } from "react";
-import { Link } from "react-router-dom";
 import axios from "axios";
-import { Navigation } from "swiper";
-import { Swiper, SwiperSlide } from "swiper/react";
 import { api } from "../../services/api";
 import { Container } from "./styles";
 import searchImg from "../../assets/search.svg";
 import starImg from "../../assets/star.svg";
 import usersImg from "../../assets/users.svg";
 import "swiper/css";
-import { MovieCard } from "../../components/MovieCard";
-import { CharacterCard } from "../../components/CharacterCard";
 import { MoviesContext } from "../../contexts/MoviesContext";
 import { CharactersCarousel } from "../../components/CharactersCarousel";
+import { MoviesCarousel } from "../../components/MoviesCarousel";
 
 export function Home() {
     const [isSearching, setIsSearching] = useState(false);
     const [search, setSearch] = useState("");
+    const [searchResult, setSearchResult] = useState("");
 
     const [characters, setCharacters] = useState([]);
 
@@ -25,19 +22,23 @@ export function Home() {
     const [researchMovies, setResearchMovies] = useState([]);
     const [researchCharacters, setResearchCharacters] = useState([]);
 
-    const [loadingMovies, setLoadingMovies] = useState(false);
-    const [loadingCharacters, setLoadingCharacters] = useState(false);
-
     const [endpointsCharacters, setEndpointsCharacters] = useState([]);
 
+    const [loadingMovies, setLoadingMovies] = useState(false);
+    const [loadingChars, setLoadingChars] = useState(false);
+
     async function getMoviesFromApi() {
+        setLoadingMovies(true);
+
         const response = await api.get("films");
 
         setMovies(response.data.results);
+
+        setLoadingMovies(false);
     }
 
     async function getCharactersFromApi() {
-        setLoadingCharacters(true);
+        setLoadingChars(true);
 
         const response = await api.get("people");
 
@@ -45,12 +46,10 @@ export function Home() {
 
         setCharacters(response.data.results);
 
-        setLoadingCharacters(false);
+        setLoadingChars(false);
     }
 
     async function loadMoreCharacters(e) {
-        setLoadingCharacters(true);
-
         if (e.isEnd) {
             const response = await axios.get(
                 endpointsCharacters[endpointsCharacters.length - 1]
@@ -64,8 +63,6 @@ export function Home() {
                 setCharacters([...characters, ...response.data.results]);
             }
         }
-
-        setLoadingCharacters(false);
     }
 
     async function getCharacterFromApi(endpoint) {
@@ -76,7 +73,7 @@ export function Home() {
         setResearchCharacters(response.data.results);
     }
 
-    function handleSubmit(e) {
+    function handleSearch(e) {
         e.preventDefault();
 
         setIsSearching(true);
@@ -87,6 +84,7 @@ export function Home() {
             )
         );
 
+        setSearchResult(search);
         getCharacterFromApi(search);
     }
 
@@ -96,11 +94,7 @@ export function Home() {
     }
 
     useEffect(() => {
-        setLoadingMovies(true);
-
         getMoviesFromApi();
-
-        setLoadingMovies(false);
 
         getCharactersFromApi();
     }, []);
@@ -110,7 +104,7 @@ export function Home() {
             <section className="banner">
                 <h1>Star Wars movies</h1>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSearch}>
                     <fieldset>
                         {search.length > 0 && (
                             <legend>Search movies or characters</legend>
@@ -138,36 +132,10 @@ export function Home() {
                             Movies
                         </h2>
 
-                        <Swiper
-                            className="carousel"
-                            loop
-                            navigation
-                            modules={[Navigation]}
-                            slidesPerView={1.3}
-                            spaceBetween={30}
-                            breakpoints={{
-                                550: {
-                                    slidesPerView: 2.5,
-                                },
-                                768: {
-                                    slidesPerView: 3,
-                                },
-                            }}
-                        >
-                            {movies.map((movie, i) => (
-                                <SwiperSlide key={i}>
-                                    <Link to={`/movies/${movie.episode_id}`}>
-                                        <MovieCard
-                                            title={movie.title}
-                                            text={movie.opening_crawl}
-                                            director={movie.director}
-                                            date={movie.release_date}
-                                            loading={loadingMovies}
-                                        />
-                                    </Link>
-                                </SwiperSlide>
-                            ))}
-                        </Swiper>
+                        <MoviesCarousel
+                            movies={movies}
+                            loading={loadingMovies}
+                        />
                     </section>
 
                     <section className="characters">
@@ -176,7 +144,12 @@ export function Home() {
                             Characters
                         </h2>
 
-                        <CharactersCarousel characters={characters} onSlideChange={(e) => loadMoreCharacters(e)} loading={loadingCharacters} />
+                        <CharactersCarousel
+                            characters={characters}
+                            onSlideChange={(e) => loadMoreCharacters(e)}
+                            loading={loadingChars}
+                            setLoading={setLoadingChars}
+                        />
                     </section>
                 </>
             ) : (
@@ -186,7 +159,7 @@ export function Home() {
                             &lt;&lt; Back
                         </button>
 
-                        <p>Search result</p>
+                        <p>Search result: {searchResult}</p>
                     </div>
 
                     {researchMovies.length === 0 &&
@@ -203,33 +176,7 @@ export function Home() {
                                 Movies
                             </h2>
 
-                            <Swiper
-                                className="carousel"
-                                navigation
-                                modules={[Navigation]}
-                                slidesPerView={1.3}
-                                spaceBetween={30}
-                                breakpoints={{
-                                    550: {
-                                        slidesPerView: 2.5,
-                                    },
-                                    768: {
-                                        slidesPerView: 3,
-                                    },
-                                }}
-                            >
-                                {researchMovies.map((researchMovie, i) => (
-                                    <SwiperSlide key={i}>
-                                        <MovieCard
-                                            title={researchMovie.title}
-                                            text={researchMovie.opening_crawl}
-                                            director={researchMovie.director}
-                                            date={researchMovie.release_date}
-                                            loading={loadingMovies}
-                                        />
-                                    </SwiperSlide>
-                                ))}
-                            </Swiper>
+                            <MoviesCarousel movies={researchMovies} />
                         </div>
                     )}
 
@@ -243,7 +190,10 @@ export function Home() {
                                 Characters
                             </h2>
 
-                            <CharactersCarousel characters={researchCharacters} loading={loadingCharacters} />
+                            <CharactersCarousel
+                                characters={researchCharacters}
+                                loading={loadingChars}
+                            />
                         </div>
                     )}
                 </section>

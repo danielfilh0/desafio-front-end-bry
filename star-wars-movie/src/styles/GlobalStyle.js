@@ -85,4 +85,14 @@ export const GlobalStyle = createGlobalStyle`
             margin-left: 5px;
         }
     }
+
+    @keyframes skeleton {
+        0% {
+            background-color: hsla(0, 2%, 88%, 1);
+        }
+
+        100% {
+            background-color: hsla(0, 0%, 80%, 0.1);
+        }
+    }
 `;
