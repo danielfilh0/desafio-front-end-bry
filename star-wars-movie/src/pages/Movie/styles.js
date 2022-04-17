@@ -102,9 +102,13 @@ export const Container = styled.main`
             margin-bottom: 2.1rem;
             max-width: 430px;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 100%;
             grid-column-gap: 0.875rem;
             grid-row-gap: 1rem;
+
+            @media ${devices.tablet} {
+                grid-template-columns: 1fr 1fr;
+            }
 
             * {
                 font-family: ${({ theme }) => theme.fonts.secondary};
@@ -130,10 +134,18 @@ export const Container = styled.main`
 
             #name {
                 grid-column: 1 / 2;
+
+                @media ${devices.tablet} {
+                    grid-column: 1 / 2;
+                }
             }
 
             #email {
-                grid-column: 2 / 3;
+                grid-column: 1 / 2;
+
+                @media ${devices.tablet} {
+                    grid-column: 2 / 3;
+                }
             }
 
             .email-invalid {
@@ -141,14 +153,18 @@ export const Container = styled.main`
             }
 
             textarea {
+                grid-column: 1 / 2;
                 padding-top: 1rem;
                 min-height: 120px;
                 resize: vertical;
-                grid-column: 1 / 3;
+
+                @media ${devices.tablet} {
+                    grid-column: 1 / 3;
+                }
             }
 
             button {
-                grid-column: 1 / 3;
+                grid-column: 1 / 2;
                 background: linear-gradient(266.4deg, #eb5757 0%, #f2994a 100%);
                 height: 56px;
                 border: 0;
@@ -159,6 +175,10 @@ export const Container = styled.main`
 
                 &:hover {
                     filter: brightness(1.1);
+                }
+
+                @media ${devices.tablet} {
+                    grid-column: 1 / 3;
                 }
             }
         }

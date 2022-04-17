@@ -1,12 +1,29 @@
 import styled from "styled-components";
+import { devices } from "../../styles/Breakpoints";
 
 export const Container = styled.section`
     max-width: 1024px;
     margin: 0 auto;
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: 100%;
     grid-column-gap: 40px;
     height: 400px;
+
+    @media ${devices.tablet} {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    > div {
+        display: none;
+
+        @media ${devices.tablet} {
+            display: block;
+        }
+
+        &:first-of-type {
+            display: block;
+        }
+    }
 
     .skeleton {
         width: 100%;
