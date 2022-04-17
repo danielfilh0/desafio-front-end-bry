@@ -80,9 +80,6 @@ export const Container = styled.main`
     }
 
     .reviews {
-        margin: 0 auto;
-        max-width: 1024px;
-
         h2 {
             display: flex;
             max-width: 1024px;
@@ -94,6 +91,11 @@ export const Container = styled.main`
             font-size: 1.375rem;
             font-weight: 300;
             color: ${({ theme }) => theme.palette.grayText};
+        }
+
+        .form-wrapper {
+            max-width: 1024px;
+            margin: 0 auto;
         }
 
         form {
@@ -161,62 +163,16 @@ export const Container = styled.main`
             }
         }
 
+        .comments-wrapper {
+            max-width: 1024px;
+            margin: 0 auto;
+        }
+
         .comments {
             max-width: 380px;
             display: flex;
             flex-direction: column;
             gap: 1.8rem;
-
-            .comment {
-                display: flex;
-                align-items: flex-start;
-                gap: 0.6rem;
-
-                p {
-                    font-family: ${({ theme }) => theme.fonts.secondary};
-                    font-size: 1rem;
-                    color: ${({ theme }) => theme.palette.gray};
-                    margin-bottom: 7px;
-                }
-
-                > div {
-                    > div {
-                        display: flex;
-                        align-items: startcenter;
-                        gap: 1rem;
-                    }
-                }
-
-                button {
-                    background: none;
-                    border: 0;
-                    display: flex;
-                    gap: 3px;
-                    align-items: center;
-
-                    span {
-                        font-family: ${({ theme }) => theme.fonts.secondary};
-                        font-size: 0.75rem;
-                    }
-                }
-
-                .deslike {
-                    span {
-                        color: ${({theme}) => theme.palette.red}
-                    }
-
-                    img {
-                        margin-top: 5px;
-                    }
-                }
-
-                .like {
-                    span {
-                        margin-top: 5px;
-                        color: ${({theme}) => theme.palette.green}
-                    }
-                }
-            }
         }
     }
 `;
