@@ -1,9 +1,11 @@
-<h1 align="center">Star wars movie</h1>
+<h1 align="center">Star wars movies</h1>
 
 <img src="screenshot.png" title="Screenshot do projeto">
 
 ### Descrição
 Star was movie é um app que te dá informações sobre o universo de Star Wars, mais especificamente sobre os filmes e personagens da série.
+
+Você pode visualizar o projeto neste <a href="https://desafio-front-end-fq5azugkk-danielfilh0.vercel.app/">link</a>.
 
 ### Funcionalidades
 - Listagem de todos os filmes
