@@ -4,7 +4,7 @@ import { Link } from "react-router-dom";
 import { LoadingMovies } from "../LoadingMovies";
 import { MovieCard } from "../MovieCard";
 
-export function MoviesCarousel({ movies, loading }) {
+export function MoviesCarousel({ movies, loading, ...props }) {
     if (loading) {
         return (
             <LoadingMovies />
@@ -14,7 +14,6 @@ export function MoviesCarousel({ movies, loading }) {
     return (
         <Swiper
             className="carousel"
-            loop
             navigation
             modules={[Navigation]}
             slidesPerView={1.3}
@@ -27,6 +26,7 @@ export function MoviesCarousel({ movies, loading }) {
                     slidesPerView: 3,
                 },
             }}
+            {...props}
         >
             {movies.map((movie, i) => (
                 <SwiperSlide key={i}>

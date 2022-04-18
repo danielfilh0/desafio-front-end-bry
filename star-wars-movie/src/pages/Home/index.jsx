@@ -135,6 +135,7 @@ export function Home() {
                         <MoviesCarousel
                             movies={movies}
                             loading={loadingMovies}
+                            loop
                         />
                     </section>
 
